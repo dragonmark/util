@@ -80,3 +80,4 @@ Returns [(filter pred coll) (remove pred coll)]"
   ([x & other]
      `(let [or# ~x]
         (if (nil? or#) (some-or ~@other) or#))))
+
