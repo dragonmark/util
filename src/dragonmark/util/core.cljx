@@ -1,5 +1,9 @@
 (ns dragonmark.util.core
-  "A bunch of functions and macros that are darned useful")
+  "A bunch of functions and macros that are darned useful"
+  (:require
+   #+clj [clojure.pprint :as pp]
+   clojure.string)
+  )
 
 
 (defn mapcatv
@@ -80,4 +84,69 @@ Returns [(filter pred coll) (remove pred coll)]"
   ([x & other]
      `(let [or# ~x]
         (if (nil? or#) (some-or ~@other) or#))))
+
+#+clj (def ^:private scheduler
+        "The JVM event scheduler"
+        (delay
+         (java.util.concurrent.Executors/newScheduledThreadPool 
+          2
+          (proxy [java.util.concurrent.ThreadFactory] []
+            (newThread [runnable] 
+              (let [t (Thread. runnable)]
+                (.setName t "delayed execution thread")
+                (.setDaemon t true)
+                t)
+              )))))
+
+(defn exec-after
+  "execute a function after a certain number of milliseconds"
+  [f after]
+  #+cljs (js/setTimeout f after)
+  #+clj (.schedule @scheduler f after
+                   java.util.concurrent.TimeUnit/MILLISECONDS))
+
+  
+(defn pretty
+  "Pretty-formats the Clojure data structure"
+  [x]
+  (cond
+   (string? x) x
+   
+   :else 
+   #+clj (with-out-str (pp/pprint x))
+   #+cljs (js/JSON.stringify (clj->js x))
+   ))
+
+(defn log
+  "A platform-neutral logging facility."
+  [ & rest]
+  #+cljs (apply js/console.log rest)
+  #+clj (let [string (clojure.string/join "" (map pretty rest))]
+          (apply println rest)))
+
+#+clj (def ^:private secure-random (java.security.SecureRandom.))
+
+(def ^:private counter (atom 100000000000))
+
+(defn- random-chars
+  "generate random characters"
+  []
+  #+cljs (str (.getRandomString goog.string) (.getRandomString goog.string))
+  #+clj (locking secure-random
+          (let [a (.nextLong secure-random)
+                b (.nextLong secure-random)]
+            (str (Long/toString (Math/abs a) 36)
+                 (Long/toString (Math/abs b) 36)
+            )))
+  )
+
+(defn next-guid
+  "Generate a monotonically increasing GUID with a ton of randomness"
+  []
+  (str "S" (swap! counter inc) (random-chars)))
+
+(defn next-clock
+  "Return a monotonically increasing number"
+  []
+  (swap! counter inc))
 

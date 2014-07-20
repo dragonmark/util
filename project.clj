@@ -1,4 +1,4 @@
-(defproject dragonmark-util "0.1.0"
+(defproject dragonmark-util "0.1.0-SNAPSHOT"
   :description "A bunch of useful functions"
   :url "https://github.com/dragonmark/util"
   :license [{:name "Eclipse Public License"
@@ -12,6 +12,7 @@
             [com.cemerick/clojurescript.test "0.3.1"]]
   :codox {:defaults {:doc/format :markdown}
           :sources ["target/generated/src"]
+          :output-dir "doc/codox"
           :src-linenum-anchor-prefix "L"
           :src-uri-mapping {#"target/generated/src" #(str "src/" % "x")}}
   :cljx
