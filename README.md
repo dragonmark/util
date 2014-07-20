@@ -1,6 +1,78 @@
 # Dragonmark - Util
 
-A bunch of Clojure utility functions and packages
+A bunch of Clojure utility functions and packages.
+
+[![Clojars Project](http://clojars.org/dragonmark-util/latest-version.svg)](http://clojars.org/dragonmark-util)
+
+## Helpful Utilities
+
+### Vector helper functions
+
+Same as `clojure.core` except for Vectors: `mapcatv` `removev`
+`restv`
+`concatv` and `consv`.
+
+### `maptree`
+
+Applies the function f to each node in the tree, bottom-up.
+Find the children using child-key and if child-key is missing, use `:children`.
+
+### `some-or`
+
+Like `or` except returns the first computed value that is not nil... allows threading
+`false` through.
+
+### `exec-after`
+
+execute a function after a certain number of milliseconds
+
+### `next-guid`
+
+Generate a monotonically increasing GUID with a ton of randomness.
+
+## Properties
+
+`dragonmark.util.props` is a nice properties file system that will look for
+the properties file based on username, machine name, and run mode:
+
+Files are searched in this order:
+
+```
+    (str "/props/" mode-name "." user-name "." host-name)
+    (str "/props/" mode-name "." user-name)
+    (str "/props/" mode-name "." host-name)
+    (str "/props/" mode-name ".default" )
+    (str "/props/" user-name )
+    "/props/default" 
+    (str "/" mode-name "." user-name "." host-name)
+    (str "/" mode-name "." user-name)
+    (str "/" mode-name "." host-name)
+    (str "/" mode-name ".default" )
+    (str "/" user-name )
+    "/default"
+```
+
+So `/props/dpp.props` is my properties file. But `test.default.props`
+is the properties file that contains properties used in tests.
+
+The properties file contains a single S-expression (usually a map)
+with all the properties. In `dev` mode, the file is checked every second
+for updates. In non-dev mode, it's checked every minute for changes.
+
+You can access the properties via: `@dragonmark.util.props/info`.
+For example, to get the database connection property: `(:db @dragonmark.util.props/info)`.
+
+You can also set up your own atom to watch for changes to the properties:
+
+```
+(def db
+	(let [a (atom nil)]
+	  (dragonmark.util.props/on-prop-change a [:info :db])
+	  a))
+```
+
+Each time the properties file changes, the `db` atom will be updated.
+
 
 ## License
 

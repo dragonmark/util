@@ -1,10 +1,10 @@
 (defproject dragonmark-util "0.1.0-SNAPSHOT"
   :description "A bunch of useful functions"
   :url "https://github.com/dragonmark/util"
-  :license [{:name "Eclipse Public License"
+  :license {:name "Eclipse Public License"
              :url "http://www.eclipse.org/legal/epl-v10.html"}
-            {:name "GNU LESSER GENERAL PUBLIC LICENSE"
-             :url "https://www.gnu.org/licenses/lgpl.txt"}]
+           ; {:name "GNU LESSER GENERAL PUBLIC LICENSE"
+           ;  :url "https://www.gnu.org/licenses/lgpl.txt"}]
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :plugins [[codox "0.8.10"]
             [lein-cljsbuild "1.0.3"]

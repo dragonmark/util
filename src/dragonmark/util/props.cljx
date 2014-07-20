@@ -91,8 +91,8 @@
     (str "/props/" mode-name "." user-name)
     (str "/props/" mode-name "." host-name)
     (str "/props/" mode-name ".default" )
-    "/props/default" 
     (str "/props/" user-name )
+    "/props/default" 
     (str "/" mode-name "." user-name "." host-name)
     (str "/" mode-name "." user-name)
     (str "/" mode-name "." host-name)
@@ -176,7 +176,8 @@ new property contents in the supplied atom."
   (letfn [(update [key r old new]
             (let [keys (if (sequential? keys) keys [keys])
                   value (reduce get new keys)]
-              (reset! atom value)
+              (when (not (= value @atom))
+                (reset! atom value))
               ))]
     (update :k info {} @info)
     (add-watch info nil update)
