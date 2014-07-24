@@ -4,6 +4,12 @@ A bunch of Clojure utility functions and packages.
 
 [![Clojars Project](http://clojars.org/dragonmark-util/latest-version.svg)](http://clojars.org/dragonmark-util)
 
+The current build status:
+<a href="https://travis-ci.org/dragonmark/util">
+![Build Status](https://travis-ci.org/dragonmark/util.svg?branch=develop)</a>
+
+
+
 ## Helpful Utilities
 
 ### Vector helper functions
