@@ -1,4 +1,4 @@
-(defproject dragonmark-util "0.1.0-SNAPSHOT"
+(defproject dragonmark-util "0.1.0"
   :description "A bunch of useful functions"
   :url "https://github.com/dragonmark/util"
   :license {:name "Eclipse Public License"
@@ -15,6 +15,7 @@
           :output-dir "doc/codox"
           :src-linenum-anchor-prefix "L"
           :src-uri-mapping {#"target/generated/src" #(str "src/" % "x")}}
+  :jar-exclusions [#"\.cljx|\.swp|\.swo|\.DS_Store|\.props"]
   :cljx
   {:builds
    [{:source-paths ["src"], :output-path "target/generated/src", :rules :clj}
