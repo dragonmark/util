@@ -3,4 +3,4 @@ target
 .lein-*
 .nrepl-*
 doc/
-pom.xml
+pom.xml*
