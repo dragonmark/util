@@ -2,7 +2,7 @@
 
 A bunch of Clojure utility functions and packages.
 
-[![Clojars Project](http://clojars.org/dragonmark-util/latest-version.svg)](http://clojars.org/dragonmark-util)
+[![Clojars Project](http://clojars.org/dragonmark/util/latest-version.svg)](http://clojars.org/dragonmark/util)
 
 The current build status:
 <a href="https://travis-ci.org/dragonmark/util">
