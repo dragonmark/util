@@ -2,7 +2,7 @@
   (:require [dragonmark.util.core :as dc])
   #+cljs (:require-macros [dragonmark.util.core :as dc])
   #+clj (:import [java.net InetAddress]
-                 [java.io InputStream])
+                 [java.io InputStream File])
   )
 
 ;; /**
@@ -101,6 +101,34 @@
     "/default"
    ]))
 
+(defn docker-props
+  []
+  #+clj (let [tf (File. "/.dockerenv")]
+          (when (.exists tf)
+            (let [pf (File. "/data/default.props")]
+              (when (.exists pf)
+                (-> pf .toURI .toURL)))))
+  #+cljs nil)
+
+(defn ^:private env-related-props
+  "Is the property_file env var set?"
+  []
+  #+clj (if-let [pf-name (System/getProperty "property_file")]
+          (let [pf (File. pf-name)]
+            (when (.exists pf)
+              (-> pf .toURI .toURL))))
+  #+cljs nil)
+
+(defn ^:private augment
+  "augments a list of files with other files based on Docker and env"
+  [lst]
+  (let [potential [(docker-props)
+                   (env-related-props)]
+        _ (println "Augmenting potential " potential)
+        potential (remove nil potential)]
+    (if (empty? potential) lst (concat potential lst)))
+  )
+
 (defn ^:private find-files
   "Looks at the list to try and returns a list of input streams"
   []
@@ -111,6 +139,7 @@
           (try
             (-> (.getClass dev-mode?) (.getResource f))
             (catch Exception e nil))))
+   augment
    (remove nil?))
   #+cljs nil
   )
@@ -130,6 +159,7 @@
                   (map
                    #+cljs (fn [x] nil)
                    #+clj (fn [x]
+                           (println "Trying " x)
                            (let [opened (.openConnection x)
                                  last-mod (.getLastModified opened)]
                              (if (= @last-checked last-mod)
@@ -159,6 +189,7 @@
 (defn- run-check-loop
   "Set up the check loop"
   []
+  (println "Hey... we're running the check ")
   (refresh-properties) 
   (dc/exec-after
    run-check-loop

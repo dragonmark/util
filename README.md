@@ -41,6 +41,14 @@ Generate a monotonically increasing GUID with a ton of randomness.
 `dragonmark.util.props` is a nice properties file system that will look for
 the properties file based on username, machine name, and run mode:
 
+If the `property_file` environment variable is set, it
+should be the name of the property file.
+
+If the `/.dockerenv` file exists, the `/data/default.props` file
+is checked. If you're running in a Docker container, you can
+put the properties file in `/data/default.props` and it will be
+used.
+
 Files are searched in this order:
 
 ```
