@@ -124,8 +124,7 @@
   [lst]
   (let [potential [(docker-props)
                    (env-related-props)]
-        _ (println "Augmenting potential " potential)
-        potential (remove nil potential)]
+        potential (remove nil? potential)]
     (if (empty? potential) lst (concat potential lst)))
   )
 
@@ -153,32 +152,36 @@
 (defn refresh-properties
   "try to reload the properties file"
   []
-  (try 
+  (try
     (let [possible (find-files)
-          mapped (->>
+          [s-exp last-mod] (->>
                   (map
                    #+cljs (fn [x] nil)
                    #+clj (fn [x]
-                           (println "Trying " x)
-                           (let [opened (.openConnection x)
-                                 last-mod (.getLastModified opened)]
-                             (if (= @last-checked last-mod)
-                               @info
-                               (let [conn (.getContent opened)
-                                     content (slurp conn)
-                                     s-exp (read-string content)]
-                                 (reset! info s-exp)
-                                 (reset! last-checked last-mod)
-                                 s-exp
-                                 )
-                             )))
+                           (try
+                             (let [opened (.openConnection x)
+                                   last-mod (.getLastModified opened)]
+                               (if (= @last-checked last-mod)
+                                 @info
+                                 (let [conn (.getContent opened)
+                                       content (slurp conn)
+                                       s-exp (read-string content)]
+                                   ;;(reset! info s-exp)
+                                   ;;(reset! last-checked last-mod)
+                                   [s-exp last-mod]
+                                   )
+                                 ))
+                             (catch Exception _ nil)
+                             ))
                    possible)
                   (remove nil?)
                   first)
           ]
-      (when (and mapped (not (= mapped @info)))
-        (reset! info mapped))
-      (or mapped @info)
+
+      (when (and s-exp (not (= s-exp @info)))
+        (reset! info s-exp)
+        (reset! last-checked last-mod))
+      (or s-exp @info)
       ) 
     (catch #+cljs js/Object #+clj Exception e 
            ;; FIXME log exceptions
@@ -189,8 +192,7 @@
 (defn- run-check-loop
   "Set up the check loop"
   []
-  (println "Hey... we're running the check ")
-  (refresh-properties) 
+  (refresh-properties)
   (dc/exec-after
    run-check-loop
    (if (dev-mode?) 
