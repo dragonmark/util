@@ -1,4 +1,4 @@
-(defproject dragonmark/util "0.1.2"
+(defproject dragonmark/util "0.1.4"
   :description "A bunch of useful functions"
   :url "https://github.com/dragonmark/util"
   :license {:name "Eclipse Public License"

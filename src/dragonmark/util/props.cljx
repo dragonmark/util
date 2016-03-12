@@ -9,7 +9,7 @@
 ;;  * Configuration management utilities.
 ;;  *
 ;;  * If you want to provide a configuration file for a subset of your application
-;;  * or for a specific environment, Lift expects configuration files to be named
+;;  * or for a specific environment, Dragonmark Utils expects configuration files to be named
 ;;  * in a manner relating to the context in which they are being used. The standard
 ;;  * name format is:
 ;;  *
@@ -20,14 +20,15 @@
 ;;  *   dpp.yak.props
 ;;  *   test.dpp.yak.props
 ;;  *   production.moose.props
+;;  *   prod.moose.props
 ;;  *   staging.dpp.props
 ;;  *   test.default.props
 ;;  *   default.props
 ;;  * </pre>
 ;;  *
 ;;  * with hostName and userName being optional, and modeName being one of
-;;  * "test", "staging", "production", "pilot", "profile", or "default".
-;;  * The standard Lift properties file extension is "props".
+;;  * "test", "staging", "production" (and its synonym "prod"), "pilot", "profile", or "default".
+;;  * The standard Dragonmark Utils properties file extension is "props".
 ;;  */
 
 (def run-modes
@@ -36,6 +37,7 @@
    :test
    :staging
    :prod
+   :production
    ])
 
 (def run-mode
@@ -53,6 +55,7 @@
   []
   (or
    (= @run-mode :prod)
+   (= @run-mode :production)
    (= @run-mode :staging)))
 
 

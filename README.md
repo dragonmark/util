@@ -69,6 +69,8 @@ Files are searched in this order:
 So `/props/dpp.props` is my properties file. But `test.default.props`
 is the properties file that contains properties used in tests.
 
+Both names, `prod` and `production` are recognized as production modes.
+
 The properties file contains a single S-expression (usually a map)
 with all the properties. In `dev` mode, the file is checked every second
 for updates. In non-dev mode, it's checked every minute for changes.
